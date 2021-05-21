@@ -6,6 +6,7 @@ import 'extensions.dart';
 abstract class MonthInterface {
   int getDaysCount();
   List<Day?> getDays();
+  Day? getDay(int dayNumber);
   int getMonthNumber();
   int getYear();
   List<Day?> getFirstDaysCount(int count);
@@ -85,4 +86,12 @@ class Month implements MonthInterface {
   @override
   List<Day?> getLastDaysCount(int count) =>
       _days.getRange(_days.length - count, _days.length).toList();
+
+  @override
+  Day? getDay(int dayNumber) {
+    for (final day in _days) {
+      if (day != null && day.getDay() == dayNumber) return day;
+    }
+    return null;
+  }
 }

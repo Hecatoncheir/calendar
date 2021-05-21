@@ -184,5 +184,24 @@ void main() {
       expect(firstWeekSunday.getDay(), equals(2));
       expect(firstWeekSunday.getMonth(), equals(DateTime.may));
     });
+
+    test("selectDay", () async {
+      final calendar = Calendar.forMonth(year: 2021, month: 5);
+      expect(calendar.getSelectedYear().getYear(), equals(2021));
+      expect(
+        calendar.getSelectedMonth().getMonthNumber(),
+        equals(DateTime.may),
+      );
+
+      expect(calendar.selectDay(2021, 5, -1), isNull);
+      expect(calendar.selectDay(2021, 5, 2)!.getYear(), equals(2021));
+      expect(calendar.selectDay(2021, 6, 2)!.getMonth(), equals(6));
+      expect(calendar.selectDay(2021, 5, 2)!.getDay(), equals(2));
+
+      expect(calendar.selectDay(2022, 5, 2)!.getYear(), equals(2022));
+      expect(calendar.getSelectedYear().getYear(), equals(2022));
+      expect(calendar.getSelectedMonth().getMonthNumber(), equals(5));
+      expect(calendar.getSelectedDay()!.getDay(), equals(2));
+    });
   });
 }

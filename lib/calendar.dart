@@ -19,6 +19,9 @@ abstract class CalendarInterface {
   Year selectPrevYear();
   Year selectNextYear();
 
+  Day? getSelectedDay();
+  Day? selectDay(int year, int month, int day);
+
   Map<int, Map<int, Day?>> getFullWeeksOfSelectedMonth();
 }
 
@@ -30,6 +33,10 @@ class Calendar implements CalendarInterface {
   late Month _selectedMonth;
   @override
   Month getSelectedMonth() => _selectedMonth;
+
+  late Day? _selectedDay;
+  @override
+  Day? getSelectedDay() => _selectedDay;
 
   late Map<int, Map<int, Day?>> _fullWeeksOfSelectedMonth;
   @override
@@ -104,6 +111,15 @@ class Calendar implements CalendarInterface {
     _selectedMonth = _selectedYear.getMonth(DateTime.january)!;
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
     return _selectedYear;
+  }
+
+  @override
+  Day? selectDay(int year, int month, int dayNumber) {
+    _selectedYear = Year(year: year);
+    _selectedMonth = _selectedYear.getMonth(month)!;
+    _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+    _selectedDay = _selectedMonth.getDay(dayNumber);
+    return _selectedDay;
   }
 
   @visibleForTesting
