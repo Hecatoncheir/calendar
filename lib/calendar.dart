@@ -64,7 +64,7 @@ class Calendar implements CalendarInterface {
     _selectedDay = Day(
       year: dateTime.year,
       month: dateTime.month,
-      day: dateTime.month,
+      day: dateTime.day,
     );
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
   }
