@@ -187,6 +187,11 @@ void main() {
 
     test("selectDay", () async {
       final calendar = Calendar.forMonth(year: 2021, month: 5);
+      expect(calendar.getSelectedDay(), isNull);
+    });
+
+    test("selectDay", () async {
+      final calendar = Calendar.forMonth(year: 2021, month: 5);
       expect(calendar.getSelectedYear().getYear(), equals(2021));
       expect(
         calendar.getSelectedMonth().getMonthNumber(),

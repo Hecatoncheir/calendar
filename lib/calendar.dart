@@ -34,7 +34,7 @@ class Calendar implements CalendarInterface {
   @override
   Month getSelectedMonth() => _selectedMonth;
 
-  late Day? _selectedDay;
+  Day? _selectedDay;
   @override
   Day? getSelectedDay() => _selectedDay;
 
