@@ -5,8 +5,11 @@ void main() {
   group("Calendar", () {
     test("forNow", () async {
       final calendar = Calendar.forNow();
-      expect(calendar.getSelectedMonth(), isNotNull);
+
       expect(calendar.getSelectedYear(), isNotNull);
+      expect(calendar.getSelectedMonth(), isNotNull);
+      expect(calendar.getSelectedDay(), isNotNull);
+
       expect(calendar.selectPrevMonth(), isNotNull);
       expect(calendar.selectNextMonth(), isNotNull);
     });
