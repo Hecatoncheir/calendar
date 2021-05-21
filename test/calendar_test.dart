@@ -4,7 +4,7 @@ import 'package:calendar/calendar.dart';
 void main() {
   group("Calendar", () {
     test("forNow", () async {
-      final calendar = Calendar.forNow();
+      final calendar = Calendar.forDay(year: 2021, month: 5, day: 9);
 
       expect(calendar.getSelectedYear(), isNotNull);
       expect(calendar.getSelectedMonth(), isNotNull);

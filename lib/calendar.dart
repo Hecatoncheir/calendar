@@ -58,26 +58,14 @@ class Calendar implements CalendarInterface {
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
   }
 
-  Calendar.forDay(DateTime dateTime) {
-    _selectedYear = Year(year: dateTime.year);
-    _selectedMonth = Month(year: dateTime.year, month: dateTime.month);
-    _selectedDay = Day(
-      year: dateTime.year,
-      month: dateTime.month,
-      day: dateTime.day,
-    );
-    _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
-  }
-
-  Calendar.forNow() {
-    final dateTime = DateTime.now();
-    _selectedYear = Year(year: dateTime.year);
-    _selectedMonth = Month(year: dateTime.year, month: dateTime.month);
-    _selectedDay = Day(
-      year: dateTime.year,
-      month: dateTime.month,
-      day: dateTime.day,
-    );
+  Calendar.forDay({
+    required int year,
+    required int month,
+    required int day,
+  }) {
+    _selectedYear = Year(year: year);
+    _selectedMonth = Month(year: year, month: month);
+    _selectedDay = Day(year: year, month: month, day: day);
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
   }
 
