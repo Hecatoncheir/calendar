@@ -16,7 +16,7 @@ void main() {
 
     test("forYear", () async {
       final calendar = Calendar.forYear(year: 2021);
-      expect(calendar.getSelectedYear().getYear(), equals(2021));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2021));
       expect(calendar.getSelectedMonth(), isNotNull);
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
@@ -95,31 +95,31 @@ void main() {
 
     test("selectYear", () async {
       final calendar = Calendar.forYear(year: 2021);
-      expect(calendar.getSelectedYear().getYear(), equals(2021));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2021));
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
-      expect(calendar.selectYear(2022)?.getYear(), equals(2022));
-      expect(calendar.getSelectedYear().getYear(), equals(2022));
+      expect(calendar.selectYear(2022)?.getYearNumber(), equals(2022));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2022));
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
     });
 
     test("selectNextYear", () async {
       final calendar = Calendar.forYear(year: 2021);
-      expect(calendar.selectNextYear().getYear(), equals(2022));
+      expect(calendar.selectNextYear().getYearNumber(), equals(2022));
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
-      expect(calendar.getSelectedYear().getYear(), equals(2022));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2022));
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
     });
 
     test("selectPrevYear", () async {
       final calendar = Calendar.forYear(year: 2021);
-      expect(calendar.selectPrevYear().getYear(), equals(2020));
+      expect(calendar.selectPrevYear().getYearNumber(), equals(2020));
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
-      expect(calendar.getSelectedYear().getYear(), equals(2020));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2020));
       expect(calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january));
     });
@@ -195,7 +195,7 @@ void main() {
 
     test("selectDay", () async {
       final calendar = Calendar.forMonth(year: 2021, month: 5);
-      expect(calendar.getSelectedYear().getYear(), equals(2021));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2021));
       expect(
         calendar.getSelectedMonth().getMonthNumber(),
         equals(DateTime.may),
@@ -207,7 +207,7 @@ void main() {
       expect(calendar.selectDay(2021, 5, 2)!.getDay(), equals(2));
 
       expect(calendar.selectDay(2022, 5, 2)!.getYear(), equals(2022));
-      expect(calendar.getSelectedYear().getYear(), equals(2022));
+      expect(calendar.getSelectedYear().getYearNumber(), equals(2022));
       expect(calendar.getSelectedMonth().getMonthNumber(), equals(5));
       expect(calendar.getSelectedDay()!.getDay(), equals(2));
     });

@@ -6,7 +6,7 @@ void main() {
     test("getYear", () async {
       const yearNumber = 2021;
       final year = Year(year: yearNumber);
-      expect(year.getYear(), equals(2021));
+      expect(year.getYearNumber(), equals(2021));
     });
 
     test("getMonth", () async {

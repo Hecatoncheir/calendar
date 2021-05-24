@@ -11,12 +11,20 @@ export 'year.dart';
 abstract class CalendarInterface {
   Month getSelectedMonth();
   Month? selectMonth(int month);
+
+  Month getPrevMonth();
   Month selectPrevMonth();
+
+  Month getNextMonth();
   Month selectNextMonth();
 
   Year getSelectedYear();
   Year? selectYear(int year);
+
+  Year getPrevYear();
   Year selectPrevYear();
+
+  Year getNextYear();
   Year selectNextYear();
 
   Day? getSelectedDay();
@@ -70,6 +78,21 @@ class Calendar implements CalendarInterface {
   }
 
   @override
+  Month getNextMonth() {
+    if (_selectedMonth.getMonthNumber() == DateTime.december) {
+      return Month(
+        year: _selectedYear.getYearNumber() + 1,
+        month: DateTime.january,
+      );
+    } else {
+      return Month(
+        year: _selectedYear.getYearNumber(),
+        month: _selectedMonth.getMonthNumber() + 1,
+      );
+    }
+  }
+
+  @override
   Month selectNextMonth() {
     if (_selectedMonth.getMonthNumber() == DateTime.december) {
       selectNextYear();
@@ -79,6 +102,21 @@ class Calendar implements CalendarInterface {
     }
 
     return _selectedMonth;
+  }
+
+  @override
+  Month getPrevMonth() {
+    if (_selectedMonth.getMonthNumber() == DateTime.january) {
+      return Month(
+        year: _selectedYear.getYearNumber() - 1,
+        month: DateTime.december,
+      );
+    } else {
+      return Month(
+        year: _selectedYear.getYearNumber(),
+        month: _selectedMonth.getMonthNumber() - 1,
+      );
+    }
   }
 
   @override
@@ -103,10 +141,16 @@ class Calendar implements CalendarInterface {
   }
 
   @override
-  Year selectNextYear() => selectYear(_selectedYear.getYear() + 1)!;
+  Year getNextYear() => Year(year: _selectedYear.getYearNumber() + 1);
 
   @override
-  Year selectPrevYear() => selectYear(_selectedYear.getYear() - 1)!;
+  Year selectNextYear() => selectYear(_selectedYear.getYearNumber() + 1)!;
+
+  @override
+  Year getPrevYear() => Year(year: _selectedYear.getYearNumber() - 1);
+
+  @override
+  Year selectPrevYear() => selectYear(_selectedYear.getYearNumber() - 1)!;
 
   @override
   Year? selectYear(int year) {

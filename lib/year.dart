@@ -1,7 +1,7 @@
 import 'month.dart';
 
 abstract class YearInterface {
-  int getYear();
+  int getYearNumber();
   Month? getMonth(int month);
   Map<int, Month?> getAllMonths();
   Map<int, Month?> getMonths(List<int> months);
@@ -10,7 +10,7 @@ abstract class YearInterface {
 class Year implements YearInterface {
   final int _year;
   @override
-  int getYear() => _year;
+  int getYearNumber() => _year;
 
   late Map<int, Month?> _allMonth;
   @override
