@@ -1,20 +1,10 @@
 import 'month.dart';
 
-abstract class YearInterface {
-  int getYearNumber();
-  Month? getMonth(int month);
-  Map<int, Month?> getAllMonths();
-  Map<int, Month?> getMonths(List<int> months);
-}
+part 'year_interface.dart';
 
 class Year implements YearInterface {
   final int _year;
-  @override
-  int getYearNumber() => _year;
-
   late Map<int, Month?> _allMonth;
-  @override
-  Map<int, Month?> getAllMonths() => _allMonth;
 
   Year({
     required year,
@@ -22,10 +12,18 @@ class Year implements YearInterface {
     _allMonth = buildAllMonthOfYear(year);
   }
 
+  @override
+  int getYearNumber() => _year;
+
+  @override
+  Map<int, Month?> getAllMonths() => _allMonth;
+
   Map<int, Month?> buildAllMonthOfYear(int year) {
     final months = <int, Month?>{};
 
-    for (int monthNumber = 1; monthNumber <= 12; monthNumber++) {
+    const monthInYear = 12;
+
+    for (int monthNumber = 1; monthNumber <= monthInYear; monthNumber++) {
       final month = Month(year: year, month: monthNumber);
       months[monthNumber] = month;
     }

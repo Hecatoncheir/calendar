@@ -1,26 +1,10 @@
-abstract class DayInterface {
-  int getWeekday();
-  int getYear();
-  int getMonth();
-  int getDay();
-}
+part 'day_interface.dart';
 
 class Day implements DayInterface {
   final int _year;
-  @override
-  int getYear() => _year;
-
   final int _month;
-  @override
-  int getMonth() => _month;
-
   final int _day;
-  @override
-  int getDay() => _day;
-
   final int _weekday;
-  @override
-  int getWeekday() => _weekday;
 
   Day({
     required int year,
@@ -30,4 +14,16 @@ class Day implements DayInterface {
         _month = month,
         _day = day,
         _weekday = DateTime(year, month, day).weekday;
+
+  @override
+  int getYear() => _year;
+
+  @override
+  int getMonth() => _month;
+
+  @override
+  int getDay() => _day;
+
+  @override
+  int getWeekday() => _weekday;
 }

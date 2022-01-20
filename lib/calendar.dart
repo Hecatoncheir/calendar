@@ -1,55 +1,20 @@
 import 'package:meta/meta.dart';
 
+import 'calendar_interface.dart';
 import 'day.dart';
 import 'month.dart';
 import 'year.dart';
 
+export 'calendar_interface.dart';
 export 'day.dart';
 export 'month.dart';
 export 'year.dart';
 
-abstract class CalendarInterface {
-  Month getSelectedMonth();
-  Month? selectMonth(int month);
-
-  Month getPrevMonth();
-  Month selectPrevMonth();
-
-  Month getNextMonth();
-  Month selectNextMonth();
-
-  Year getSelectedYear();
-  Year? selectYear(int year);
-
-  Year getPrevYear();
-  Year selectPrevYear();
-
-  Year getNextYear();
-  Year selectNextYear();
-
-  Day? getSelectedDay();
-  Day? selectDay(int year, int month, int day);
-
-  Map<int, Map<int, Day?>> getFullWeeksOfSelectedMonth();
-}
-
 class Calendar implements CalendarInterface {
   late Year _selectedYear;
-  @override
-  Year getSelectedYear() => _selectedYear;
-
   late Month _selectedMonth;
-  @override
-  Month getSelectedMonth() => _selectedMonth;
-
   Day? _selectedDay;
-  @override
-  Day? getSelectedDay() => _selectedDay;
-
   late Map<int, Map<int, Day?>> _fullWeeksOfSelectedMonth;
-  @override
-  Map<int, Map<int, Day?>> getFullWeeksOfSelectedMonth() =>
-      _fullWeeksOfSelectedMonth;
 
   Calendar.forYear({
     required int year,
@@ -78,24 +43,36 @@ class Calendar implements CalendarInterface {
   }
 
   @override
+  Year getSelectedYear() => _selectedYear;
+
+  @override
+  Month getSelectedMonth() => _selectedMonth;
+
+  @override
+  Day? getSelectedDay() => _selectedDay;
+
+  @override
+  Map<int, Map<int, Day?>> getFullWeeksOfSelectedMonth() =>
+      _fullWeeksOfSelectedMonth;
+
+  @override
   Month getNextMonth() {
-    if (_selectedMonth.getMonthNumber() == DateTime.december) {
-      return Month(
-        year: _selectedYear.getYearNumber() + 1,
-        month: DateTime.january,
-      );
-    } else {
-      return Month(
-        year: _selectedYear.getYearNumber(),
-        month: _selectedMonth.getMonthNumber() + 1,
-      );
-    }
+    return _selectedMonth.getMonthNumber() == DateTime.december
+        ? Month(
+            year: _selectedYear.getYearNumber() + 1,
+            month: DateTime.january,
+          )
+        : Month(
+            year: _selectedYear.getYearNumber(),
+            month: _selectedMonth.getMonthNumber() + 1,
+          );
   }
 
   @override
   Month selectNextMonth() {
     if (_selectedMonth.getMonthNumber() == DateTime.december) {
       selectNextYear();
+
       return _selectedMonth;
     } else {
       selectMonth(_selectedMonth.getMonthNumber() + 1);
@@ -106,17 +83,15 @@ class Calendar implements CalendarInterface {
 
   @override
   Month getPrevMonth() {
-    if (_selectedMonth.getMonthNumber() == DateTime.january) {
-      return Month(
-        year: _selectedYear.getYearNumber() - 1,
-        month: DateTime.december,
-      );
-    } else {
-      return Month(
-        year: _selectedYear.getYearNumber(),
-        month: _selectedMonth.getMonthNumber() - 1,
-      );
-    }
+    return _selectedMonth.getMonthNumber() == DateTime.january
+        ? Month(
+            year: _selectedYear.getYearNumber() - 1,
+            month: DateTime.december,
+          )
+        : Month(
+            year: _selectedYear.getYearNumber(),
+            month: _selectedMonth.getMonthNumber() - 1,
+          );
   }
 
   @override
@@ -137,6 +112,7 @@ class Calendar implements CalendarInterface {
     if (selectedMonth == null) return null;
     _selectedMonth = selectedMonth;
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+
     return _selectedMonth;
   }
 
@@ -157,6 +133,7 @@ class Calendar implements CalendarInterface {
     _selectedYear = Year(year: year);
     _selectedMonth = _selectedYear.getMonth(DateTime.january)!;
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+
     return _selectedYear;
   }
 
@@ -166,6 +143,7 @@ class Calendar implements CalendarInterface {
     _selectedMonth = _selectedYear.getMonth(month)!;
     _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
     _selectedDay = _selectedMonth.getDay(dayNumber);
+
     return _selectedDay;
   }
 

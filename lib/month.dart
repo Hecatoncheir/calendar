@@ -3,37 +3,14 @@ import 'package:meta/meta.dart';
 import 'day.dart';
 import 'extensions.dart';
 
-abstract class MonthInterface {
-  int getDaysCount();
-  List<Day?> getDays();
-  Day? getDay(int dayNumber);
-  int getMonthNumber();
-  int getYear();
-  List<Day?> getFirstDaysCount(int count);
-  List<Day?> getLastDaysCount(int count);
-  Map<int, Map<int, Day?>> getWeeks();
-}
+part 'month_interface.dart';
 
 class Month implements MonthInterface {
   final int _month;
-  @override
-  int getMonthNumber() => _month;
-
   final int _year;
-  @override
-  int getYear() => _year;
-
   final int _daysCount;
-  @override
-  int getDaysCount() => _daysCount;
-
   late final List<Day?> _days;
-  @override
-  List<Day?> getDays() => _days;
-
   late final Map<int, Map<int, Day?>> _weeks;
-  @override
-  Map<int, Map<int, Day?>> getWeeks() => _weeks;
 
   Month({
     required int year,
@@ -44,6 +21,21 @@ class Month implements MonthInterface {
     _days = buildDays(_daysCount);
     _weeks = buildWeeks(_days);
   }
+
+  @override
+  int getMonthNumber() => _month;
+
+  @override
+  int getYear() => _year;
+
+  @override
+  int getDaysCount() => _daysCount;
+
+  @override
+  List<Day?> getDays() => _days;
+
+  @override
+  Map<int, Map<int, Day?>> getWeeks() => _weeks;
 
   @visibleForTesting
   List<Day?> buildDays(int daysCount) {
@@ -92,6 +84,7 @@ class Month implements MonthInterface {
     for (final day in _days) {
       if (day != null && day.getDay() == dayNumber) return day;
     }
+
     return null;
   }
 }
