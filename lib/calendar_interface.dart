@@ -1,28 +1,35 @@
-import 'day.dart';
-import 'month.dart';
-import 'year.dart';
+part of 'calendar.dart';
 
 abstract class CalendarInterface {
-  Month getSelectedMonth();
-  Month? selectMonth(int month);
+  YearInterface getSelectedYear();
+  void selectYear(int year);
 
-  Month getPrevMonth();
-  Month selectPrevMonth();
+  YearInterface getPrevYear();
+  void selectPrevYear();
 
-  Month getNextMonth();
-  Month selectNextMonth();
+  YearInterface getNextYear();
+  void selectNextYear();
 
-  Year getSelectedYear();
-  Year? selectYear(int year);
+  MonthInterface getSelectedMonth();
+  void selectMonth(int month);
 
-  Year getPrevYear();
-  Year selectPrevYear();
+  MonthInterface getPrevMonth();
+  void selectPrevMonth();
 
-  Year getNextYear();
-  Year selectNextYear();
+  MonthInterface getNextMonth();
+  void selectNextMonth();
 
-  Day? getSelectedDay();
-  Day? selectDay(int year, int month, int day);
+  WeekInterface getSelectedWeek();
+  void selectMonthWeek(int week);
 
-  Map<int, Map<int, Day?>> getFullWeeksOfSelectedMonth();
+  WeekInterface getPrevWeek();
+  void selectPrevWeek();
+
+  WeekInterface getNextWeek();
+  void selectNextWeek();
+
+  DayInterface? getSelectedDay();
+  void selectDay(int year, int month, int day);
+
+  List<WeekInterface> getFullWeeksOfSelectedMonth();
 }

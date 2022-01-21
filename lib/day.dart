@@ -4,7 +4,6 @@ class Day implements DayInterface {
   final int _year;
   final int _month;
   final int _day;
-  final int _weekday;
 
   Day({
     required int year,
@@ -12,8 +11,7 @@ class Day implements DayInterface {
     required int day,
   })  : _year = year,
         _month = month,
-        _day = day,
-        _weekday = DateTime(year, month, day).weekday;
+        _day = day;
 
   @override
   int getYear() => _year;
@@ -25,5 +23,5 @@ class Day implements DayInterface {
   int getDay() => _day;
 
   @override
-  int getWeekday() => _weekday;
+  int getWeekday() => DateTime(_year, _month, _day).weekday;
 }

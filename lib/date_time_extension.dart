@@ -1,4 +1,5 @@
-extension Additional on DateTime {
+extension DateTimeExtension on DateTime {
+  //ignore: no-magic-number
   bool isLeapYear() => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 
   int daysInMonthCount() {

@@ -1,7 +1,8 @@
+import 'package:calendar/week.dart';
 import 'package:meta/meta.dart';
 
 import 'day.dart';
-import 'extensions.dart';
+import 'date_time_extension.dart';
 
 part 'month_interface.dart';
 
@@ -9,17 +10,23 @@ class Month implements MonthInterface {
   final int _month;
   final int _year;
   final int _daysCount;
-  late final List<Day?> _days;
-  late final Map<int, Map<int, Day?>> _weeks;
+  late final List<DayInterface?> _days;
+  late final List<WeekInterface> _weeks;
+  late final _numberOfWeeks;
+
+  final _whichDayToWeekStart;
 
   Month({
     required int year,
     required int month,
+    int whichDayToWeekStart = DateTime.monday,
   })  : _year = year,
         _month = month,
-        _daysCount = DateTime(year, month).daysInMonthCount() {
+        _daysCount = DateTime(year, month).daysInMonthCount(),
+        _whichDayToWeekStart = whichDayToWeekStart {
     _days = buildDays(_daysCount);
     _weeks = buildWeeks(_days);
+    _numberOfWeeks = _weeks.length;
   }
 
   @override
@@ -32,10 +39,10 @@ class Month implements MonthInterface {
   int getDaysCount() => _daysCount;
 
   @override
-  List<Day?> getDays() => _days;
+  List<DayInterface?> getDays() => _days;
 
   @override
-  Map<int, Map<int, Day?>> getWeeks() => _weeks;
+  List<WeekInterface> getWeeks() => _weeks;
 
   @visibleForTesting
   List<Day?> buildDays(int daysCount) {
@@ -50,11 +57,66 @@ class Month implements MonthInterface {
   }
 
   @visibleForTesting
-  Map<int, Map<int, Day?>> buildWeeks(List<Day?> days) {
-    final weeks = <int, Map<int, Day?>>{};
+  List<WeekInterface> buildWeeks(List<DayInterface?> days) {
+    final _weeks = _buildWeeks(_whichDayToWeekStart, days);
+
+    final weeks = <WeekInterface>[];
+    for (final _weekNumber in _weeks.keys) {
+      final _week = _weeks[_weekNumber];
+      if (_week == null) continue;
+
+      final week = Week(weekNumberInMonth: _weekNumber, days: _week);
+      weeks.add(week);
+    }
+
+    return weeks;
+  }
+
+  @override
+  List<DayInterface?> getFirstDaysCount(int count) =>
+      _days.getRange(0, count).toList();
+
+  @override
+  List<DayInterface?> getLastDaysCount(int count) =>
+      _days.getRange(_days.length - count, _days.length).toList();
+
+  @override
+  DayInterface? getDay(int dayNumber) {
+    for (final day in _days) {
+      if (day != null && day.getDay() == dayNumber) return day;
+    }
+
+    return null;
+  }
+
+  @override
+  int getNumberOfWeeks() => _numberOfWeeks;
+
+  @override
+  WeekInterface? getWeekOfDay(int day) {
+    WeekInterface? weekOfDay;
+
+    for (final week in _weeks) {
+      for (final dayOfWeek in week.getDaysOfWeek().values) {
+        if (dayOfWeek == null) continue;
+        if (dayOfWeek.getDay() != day) continue;
+
+        weekOfDay = week;
+        break;
+      }
+    }
+
+    return weekOfDay;
+  }
+
+  Map<int, Map<int, DayInterface?>> _buildWeeks(
+    int whichDayToWeekStart, // TODO: make it right
+    List<DayInterface?> days,
+  ) {
+    final weeks = <int, Map<int, DayInterface?>>{};
 
     int weekNumber = 1;
-    Map<int, Day?> week = <int, Day?>{};
+    Map<int, DayInterface?> week = <int, DayInterface?>{};
     weeks[weekNumber] = week;
 
     for (final day in days) {
@@ -64,27 +126,11 @@ class Month implements MonthInterface {
 
       if (day.getWeekday() == DateTime.sunday) {
         weekNumber++;
-        week = <int, Day?>{};
+        week = <int, DayInterface?>{};
         weeks[weekNumber] = week;
       }
     }
 
     return weeks;
-  }
-
-  @override
-  List<Day?> getFirstDaysCount(int count) => _days.getRange(0, count).toList();
-
-  @override
-  List<Day?> getLastDaysCount(int count) =>
-      _days.getRange(_days.length - count, _days.length).toList();
-
-  @override
-  Day? getDay(int dayNumber) {
-    for (final day in _days) {
-      if (day != null && day.getDay() == dayNumber) return day;
-    }
-
-    return null;
   }
 }

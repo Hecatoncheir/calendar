@@ -88,13 +88,49 @@ void main() {
 
       expect(weeks.length, equals(6));
 
-      expect(weeks.values.first[DateTime.monday], isNull);
-      expect(weeks[1]![DateTime.monday], isNull);
-      expect(weeks[1]![DateTime.saturday]!.getDay(), equals(1));
-      expect(weeks[2]![DateTime.monday]!.getDay(), equals(3));
-      expect(weeks[6]![DateTime.monday]!.getDay(), equals(31));
-      expect(weeks[7], isNull);
-      expect(weeks.values.last[DateTime.monday]!.getDay(), equals(31));
+      expect(weeks.first.getDayOfWeek(DateTime.monday), isNull);
+      expect(weeks.first.getWeekNumberInMonth(), equals(1));
+      expect(weeks[0].getWeekNumberInMonth(), equals(1));
+      expect(weeks[0].getDayOfWeek(DateTime.monday), isNull);
+      expect(weeks[0].getDayOfWeek(DateTime.saturday)?.getDay(), equals(1));
+
+      expect(weeks[1].getDayOfWeek(DateTime.monday)?.getDay(), equals(3));
+
+      expect(weeks[5].getDayOfWeek(DateTime.monday)?.getDay(), equals(31));
+      expect(weeks.last.getDayOfWeek(DateTime.monday)?.getDay(), equals(31));
+    });
+
+    test("buildWeeks", () async {
+      const yearNumber = 2022;
+
+      final month = Month(year: yearNumber, month: DateTime.january);
+      final weeks = month.getWeeks();
+
+      expect(weeks.length, equals(6));
+
+      expect(weeks.first.getWeekNumberInMonth(), equals(1));
+      expect(weeks.first.getDayOfWeek(DateTime.monday), isNull);
+      expect(weeks.first.getDayOfWeek(DateTime.sunday)?.getDay(), equals(2));
+
+      expect(weeks[1].getWeekNumberInMonth(), equals(2));
+      expect(weeks[1].getDayOfWeek(DateTime.sunday)?.getDay(), equals(9));
+    });
+
+    test('can return number of weeks', () async {
+      const yearNumber = 2021;
+
+      final month = Month(year: yearNumber, month: DateTime.may);
+      final numberOfWeeks = month.getNumberOfWeeks();
+
+      expect(numberOfWeeks, equals(6));
+    });
+
+    test('can return week of day', () async {
+      const yearNumber = 2022;
+      final month = Month(year: yearNumber, month: DateTime.january);
+
+      final weekOfDay = month.getWeekOfDay(21);
+      expect(weekOfDay?.getWeekNumberInMonth(), equals(4));
     });
   });
 }

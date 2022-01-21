@@ -3,7 +3,7 @@ import 'package:calendar/day.dart';
 
 void main() {
   group("Day", () {
-    test("getWeekday", () async {
+    test("can return week day", () async {
       const yearNumber = 2021;
       const monthNumber = 5;
       const dayNumber = 11;
@@ -13,7 +13,7 @@ void main() {
       expect(day.getWeekday() == DateTime.tuesday, isTrue);
     });
 
-    test("getWeekday", () async {
+    test("can return week day", () async {
       const year = 2021;
       const month = 5;
       const dayNumber = 10;

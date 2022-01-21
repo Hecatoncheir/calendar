@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:calendar/extensions.dart';
+import 'package:calendar/date_time_extension.dart';
 
 void main() {
   group("Additional extensions", () {

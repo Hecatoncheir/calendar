@@ -2,7 +2,7 @@ part of 'year.dart';
 
 abstract class YearInterface {
   int getYearNumber();
-  Month? getMonth(int month);
-  Map<int, Month?> getAllMonths();
-  Map<int, Month?> getMonths(List<int> months);
+  MonthInterface? getMonth(int month);
+  Map<int, MonthInterface?> getAllMonths();
+  Map<int, MonthInterface?> getMonths(List<int> months);
 }
