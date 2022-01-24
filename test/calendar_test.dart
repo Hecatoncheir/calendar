@@ -300,6 +300,41 @@ void main() {
         expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(5));
       });
 
+      test('can select prev between months', () async {
+        final calendar =
+            Calendar.forDay(year: 2022, month: DateTime.february, day: 1);
+
+        expect(
+          calendar.getSelectedYear().getYearNumber(),
+          equals(2022),
+        );
+        expect(
+          calendar.getSelectedMonth().getMonthNumber(),
+          equals(DateTime.february),
+        );
+        expect(
+          calendar.getSelectedDay()?.getDay(),
+          equals(1),
+        );
+
+        // TODO: not right week number in month
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));
+
+        calendar.selectPrevWeek();
+
+        expect(
+          calendar.getSelectedYear().getYearNumber(),
+          equals(2022),
+        );
+
+        expect(
+          calendar.getSelectedMonth().getMonthNumber(),
+          equals(DateTime.january),
+        );
+
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(5));
+      });
+
       test('can select next', () async {
         final calendar =
             Calendar.forMonth(year: 2021, month: DateTime.december);
@@ -324,6 +359,39 @@ void main() {
         expect(
           calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.january),
+        );
+
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));
+      });
+
+      test('can select next between months', () async {
+        final calendar =
+            Calendar.forDay(year: 2022, month: DateTime.january, day: 31);
+
+        expect(
+          calendar.getSelectedYear().getYearNumber(),
+          equals(2022),
+        );
+        expect(
+          calendar.getSelectedMonth().getMonthNumber(),
+          equals(DateTime.january),
+        );
+        expect(
+          calendar.getSelectedDay()?.getDay(),
+          equals(31),
+        );
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(6));
+
+        calendar.selectNextWeek();
+
+        expect(
+          calendar.getSelectedYear().getYearNumber(),
+          equals(2022),
+        );
+
+        expect(
+          calendar.getSelectedMonth().getMonthNumber(),
+          equals(DateTime.february),
         );
 
         expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));

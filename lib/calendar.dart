@@ -250,6 +250,8 @@ class Calendar implements CalendarInterface {
     if (weekNumber < 1) {
       selectPrevMonth();
       _selectedWeek = _selectedMonth.getWeeks().last;
+      print(_selectedMonth.getWeeks().length);
+      print(_selectedWeek.getWeekNumberInMonth());
     } else {
       _selectedWeek = _selectedMonth
           .getWeeks()
