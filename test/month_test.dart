@@ -124,13 +124,5 @@ void main() {
 
       expect(numberOfWeeks, equals(6));
     });
-
-    test('can return week of day', () async {
-      const yearNumber = 2022;
-      final month = Month(year: yearNumber, month: DateTime.january);
-
-      final weekOfDay = month.getWeekOfDay(21);
-      expect(weekOfDay?.getWeekNumberInMonth(), equals(4));
-    });
   });
 }

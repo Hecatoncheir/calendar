@@ -32,4 +32,6 @@ abstract class CalendarInterface {
   void selectDay(int year, int month, int day);
 
   List<WeekInterface> getFullWeeksOfSelectedMonth();
+
+  WeekInterface? getWeekOfDay(DayInterface day);
 }

@@ -317,7 +317,6 @@ void main() {
           equals(1),
         );
 
-        // TODO: not right week number in month
         expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));
 
         calendar.selectPrevWeek();
@@ -332,7 +331,7 @@ void main() {
           equals(DateTime.january),
         );
 
-        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(5));
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(6));
       });
 
       test('can select next', () async {
@@ -429,6 +428,24 @@ void main() {
           calendar.getSelectedWeek().getDayOfWeek(DateTime.sunday)?.getDay(),
           equals(9),
         );
+      });
+
+      test('can return week of day', () async {
+        const year = 2022;
+        const month = DateTime.january;
+        const day = 21;
+
+        final calendar = Calendar.forMonth(year: year, month: month);
+
+        final _day = Day(
+          year: year,
+          month: month,
+          day: day,
+        );
+
+        final weekOfDay = calendar.getWeekOfDay(_day);
+        expect(weekOfDay, isNotNull);
+        expect(weekOfDay?.getWeekNumberInMonth(), equals(4));
       });
     });
   });

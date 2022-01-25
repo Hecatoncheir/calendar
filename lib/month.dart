@@ -1,5 +1,7 @@
-import 'package:calendar/week.dart';
 import 'package:meta/meta.dart';
+import 'package:collection/collection.dart';
+
+import 'package:calendar/week.dart';
 
 import 'day.dart';
 import 'date_time_extension.dart';
@@ -30,10 +32,10 @@ class Month implements MonthInterface {
   }
 
   @override
-  int getMonthNumber() => _month;
+  int getYear() => _year;
 
   @override
-  int getYear() => _year;
+  int getMonthNumber() => _month;
 
   @override
   int getDaysCount() => _daysCount;
@@ -42,7 +44,14 @@ class Month implements MonthInterface {
   List<DayInterface?> getDays() => _days;
 
   @override
+  DayInterface? getDay(int dayNumber) =>
+      _days.firstWhereOrNull((day) => day != null && day.getDay() == dayNumber);
+
+  @override
   List<WeekInterface> getWeeks() => _weeks;
+
+  @override
+  int getNumberOfWeeks() => _numberOfWeeks;
 
   @visibleForTesting
   List<Day?> buildDays(int daysCount) {
@@ -80,37 +89,8 @@ class Month implements MonthInterface {
   List<DayInterface?> getLastDaysCount(int count) =>
       _days.getRange(_days.length - count, _days.length).toList();
 
-  @override
-  DayInterface? getDay(int dayNumber) {
-    for (final day in _days) {
-      if (day != null && day.getDay() == dayNumber) return day;
-    }
-
-    return null;
-  }
-
-  @override
-  int getNumberOfWeeks() => _numberOfWeeks;
-
-  @override
-  WeekInterface? getWeekOfDay(int day) {
-    WeekInterface? weekOfDay;
-
-    for (final week in _weeks) {
-      for (final dayOfWeek in week.getDaysOfWeek().values) {
-        if (dayOfWeek == null) continue;
-        if (dayOfWeek.getDay() != day) continue;
-
-        weekOfDay = week;
-        break;
-      }
-    }
-
-    return weekOfDay;
-  }
-
   Map<int, Map<int, DayInterface?>> _buildWeeks(
-    int whichDayToWeekStart, // TODO: make it right
+    int whichDayToWeekStart, // TODO: use it for build weeks
     List<DayInterface?> days,
   ) {
     final weeks = <int, Map<int, DayInterface?>>{};

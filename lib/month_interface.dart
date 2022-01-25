@@ -10,5 +10,4 @@ abstract class MonthInterface {
   List<DayInterface?> getLastDaysCount(int count);
   List<WeekInterface> getWeeks();
   int getNumberOfWeeks();
-  WeekInterface? getWeekOfDay(int day);
 }

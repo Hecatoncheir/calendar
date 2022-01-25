@@ -23,11 +23,10 @@ class Calendar implements CalendarInterface {
   Calendar.forYear({
     required int year,
   }) : _selectedYear = Year(year: year) {
-    final month = _selectedYear.getMonth(DateTime.january);
-    if (month == null) return;
-    _selectedMonth = month;
-
-    _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+    final _month = _selectedYear.getMonth(DateTime.january);
+    if (_month == null) return;
+    _selectedMonth = _month;
+    _fullWeeksOfSelectedMonth = buildFullWeeksOfMonth(_month);
     _selectedWeek = _fullWeeksOfSelectedMonth.first;
   }
 
@@ -38,8 +37,7 @@ class Calendar implements CalendarInterface {
     final _month = _selectedYear.getMonth(month);
     if (_month == null) return;
     _selectedMonth = _month;
-
-    _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+    _fullWeeksOfSelectedMonth = buildFullWeeksOfMonth(_month);
     _selectedWeek = _fullWeeksOfSelectedMonth.first;
   }
 
@@ -48,12 +46,19 @@ class Calendar implements CalendarInterface {
     required int month,
     required int day,
   }) {
-    _selectedYear = Year(year: year);
-    _selectedMonth = Month(year: year, month: month);
-    _selectedDay = Day(year: year, month: month, day: day);
-    _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+    final _year = Year(year: year);
+    _selectedYear = _year;
 
-    final weekOfDay = _selectedMonth.getWeekOfDay(day);
+    final _month = Month(year: year, month: month);
+    _selectedMonth = _month;
+
+    final _day = Day(year: year, month: month, day: day);
+    _selectedDay = _day;
+
+    _fullWeeksOfSelectedMonth = buildFullWeeksOfMonth(_month);
+    _selectedWeek = _fullWeeksOfSelectedMonth.first;
+
+    final weekOfDay = getWeekOfDay(_day);
     if (weekOfDay != null) _selectedWeek = weekOfDay;
   }
 
@@ -117,10 +122,10 @@ class Calendar implements CalendarInterface {
 
   @override
   void selectMonth(int month) {
-    final selectedMonth = _selectedYear.getMonth(month);
-    if (selectedMonth == null) return null;
-    _selectedMonth = selectedMonth;
-    _fullWeeksOfSelectedMonth = buildFullWeeksOfSelectedMonth(_selectedMonth);
+    final _month = _selectedYear.getMonth(month);
+    if (_month == null) return null;
+    _selectedMonth = _month;
+    _fullWeeksOfSelectedMonth = buildFullWeeksOfMonth(_selectedMonth);
     _selectedWeek = _fullWeeksOfSelectedMonth.first;
   }
 
@@ -145,26 +150,24 @@ class Calendar implements CalendarInterface {
   @override
   void selectDay(int year, int month, int dayNumber) {
     _selectedYear = Year(year: year);
-
     selectMonth(month);
 
-    _selectedDay = _selectedMonth.getDay(dayNumber);
+    final _day = _selectedMonth.getDay(dayNumber);
+    if (_day == null) return;
 
-    final weekOfDay = _selectedMonth.getWeekOfDay(dayNumber);
+    _selectedDay = _day;
 
+    final weekOfDay = getWeekOfDay(_day);
     if (weekOfDay != null) _selectedWeek = weekOfDay;
   }
 
   @visibleForTesting
-  List<WeekInterface> buildFullWeeksOfSelectedMonth(MonthInterface month) {
+  List<WeekInterface> buildFullWeeksOfMonth(MonthInterface month) {
     final weeksOfMonth = month.getWeeks();
 
     /// Fill days from previous month
     final firstWeek = weeksOfMonth.first;
-    final previousMonth = Month(
-      year: _selectedMonth.getYear(),
-      month: _selectedMonth.getMonthNumber() - 1,
-    );
+    final previousMonth = getPrevMonth();
 
     final daysInPreviousMonthInLastWeek =
         previousMonth.getWeeks().last.getDaysOfWeek().values;
@@ -184,10 +187,7 @@ class Calendar implements CalendarInterface {
 
     /// Fill days from next month
     final lastWeek = weeksOfMonth.last;
-    final nextMonth = Month(
-      year: _selectedMonth.getYear(),
-      month: _selectedMonth.getMonthNumber() + 1,
-    );
+    final nextMonth = getNextMonth();
 
     final daysInNextMonthInFirstWeek =
         nextMonth.getWeeks().first.getDaysOfWeek().values;
@@ -250,8 +250,6 @@ class Calendar implements CalendarInterface {
     if (weekNumber < 1) {
       selectPrevMonth();
       _selectedWeek = _selectedMonth.getWeeks().last;
-      print(_selectedMonth.getWeeks().length);
-      print(_selectedWeek.getWeekNumberInMonth());
     } else {
       _selectedWeek = _selectedMonth
           .getWeeks()
@@ -267,5 +265,23 @@ class Calendar implements CalendarInterface {
     _selectedWeek = _selectedMonth
         .getWeeks()
         .firstWhere((week) => week.getWeekNumberInMonth() == weekNumber);
+  }
+
+  @override
+  WeekInterface? getWeekOfDay(DayInterface day) {
+    WeekInterface? weekOfDay;
+
+    for (final week in _fullWeeksOfSelectedMonth) {
+      for (final dayOfWeek in week.getDaysOfWeek().values) {
+        if (dayOfWeek == null) continue;
+        if (dayOfWeek.getMonth() != day.getMonth()) continue;
+        if (dayOfWeek.getDay() != day.getDay()) continue;
+
+        weekOfDay = week;
+        break;
+      }
+    }
+
+    return weekOfDay;
   }
 }
