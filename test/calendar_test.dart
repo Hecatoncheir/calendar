@@ -331,12 +331,19 @@ void main() {
           equals(DateTime.january),
         );
 
+        expect(calendar.getSelectedDay()?.getYear(), equals(2022));
+        expect(
+          calendar.getSelectedDay()?.getMonth(),
+          equals(DateTime.february),
+        );
+        expect(calendar.getSelectedDay()?.getDay(), equals(1));
+
         expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(6));
       });
 
       test('can select next', () async {
         final calendar =
-            Calendar.forMonth(year: 2021, month: DateTime.december);
+            Calendar.forDay(year: 2021, month: DateTime.december, day: 31);
 
         expect(
           calendar.getSelectedYear().getYearNumber(),
@@ -346,7 +353,7 @@ void main() {
           calendar.getSelectedMonth().getMonthNumber(),
           equals(DateTime.december),
         );
-        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(5));
 
         calendar.selectNextWeek();
 
@@ -393,7 +400,44 @@ void main() {
           equals(DateTime.february),
         );
 
+        expect(calendar.getSelectedDay()?.getDay(), equals(31));
+
         expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));
+      });
+
+      test('can select next in month', () async {
+        final calendar =
+            Calendar.forDay(year: 2022, month: DateTime.january, day: 1);
+
+        expect(
+          calendar.getSelectedYear().getYearNumber(),
+          equals(2022),
+        );
+        expect(
+          calendar.getSelectedMonth().getMonthNumber(),
+          equals(DateTime.january),
+        );
+        expect(
+          calendar.getSelectedDay()?.getDay(),
+          equals(1),
+        );
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(1));
+
+        calendar.selectNextWeek();
+
+        expect(
+          calendar.getSelectedYear().getYearNumber(),
+          equals(2022),
+        );
+
+        expect(
+          calendar.getSelectedMonth().getMonthNumber(),
+          equals(DateTime.january),
+        );
+
+        expect(calendar.getSelectedDay()?.getDay(), equals(1));
+
+        expect(calendar.getSelectedWeek().getWeekNumberInMonth(), equals(2));
       });
 
       test('can select', () async {

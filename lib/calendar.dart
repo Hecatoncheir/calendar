@@ -231,29 +231,29 @@ class Calendar implements CalendarInterface {
 
   @override
   void selectNextWeek() {
-    final weekNumber = _selectedWeek.getWeekNumberInMonth() + 1;
+    final newWeekNumber = _selectedWeek.getWeekNumberInMonth() + 1;
 
-    if (weekNumber > _selectedWeek.getWeekNumberInMonth()) {
+    if (newWeekNumber > _selectedMonth.getNumberOfWeeks()) {
       selectNextMonth();
       _selectedWeek = _selectedMonth.getWeeks().first;
     } else {
       _selectedWeek = _selectedMonth
           .getWeeks()
-          .firstWhere((week) => week.getWeekNumberInMonth() == weekNumber);
+          .firstWhere((week) => week.getWeekNumberInMonth() == newWeekNumber);
     }
   }
 
   @override
   void selectPrevWeek() {
-    final weekNumber = _selectedWeek.getWeekNumberInMonth() - 1;
+    final newWeekNumber = _selectedWeek.getWeekNumberInMonth() - 1;
 
-    if (weekNumber < 1) {
+    if (newWeekNumber < 1) {
       selectPrevMonth();
       _selectedWeek = _selectedMonth.getWeeks().last;
     } else {
       _selectedWeek = _selectedMonth
           .getWeeks()
-          .firstWhere((week) => week.getWeekNumberInMonth() == weekNumber);
+          .firstWhere((week) => week.getWeekNumberInMonth() == newWeekNumber);
     }
   }
 
