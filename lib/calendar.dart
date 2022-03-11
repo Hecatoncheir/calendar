@@ -182,7 +182,12 @@ class Calendar implements CalendarInterface {
     for (int dayInWeek = 1; dayInWeek <= daysInWeek; dayInWeek++) {
       sortedFirstWeek[dayInWeek] = firstWeek.getDayOfWeek(dayInWeek);
     }
-    final updatedFirstWeek = Week(weekNumberInMonth: 1, days: sortedFirstWeek);
+    final updatedFirstWeek = Week(
+      year: month.getYear(),
+      month: month.getMonthNumber(),
+      weekNumberInMonth: 1,
+      days: sortedFirstWeek,
+    );
     weeksOfMonth.first = updatedFirstWeek;
 
     /// Fill days from next month

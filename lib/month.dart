@@ -27,7 +27,7 @@ class Month implements MonthInterface {
         _daysCount = DateTime(year, month).daysInMonthCount(),
         _whichDayToWeekStart = whichDayToWeekStart {
     _days = buildDays(_daysCount);
-    _weeks = buildWeeks(_days);
+    _weeks = buildWeeks(year, month, _days);
     _numberOfWeeks = _weeks.length;
   }
 
@@ -66,7 +66,11 @@ class Month implements MonthInterface {
   }
 
   @visibleForTesting
-  List<WeekInterface> buildWeeks(List<DayInterface?> days) {
+  List<WeekInterface> buildWeeks(
+    int year,
+    int month,
+    List<DayInterface?> days,
+  ) {
     final _weeks = _buildWeeks(_whichDayToWeekStart, days);
 
     final weeks = <WeekInterface>[];
@@ -74,7 +78,12 @@ class Month implements MonthInterface {
       final _week = _weeks[_weekNumber];
       if (_week == null) continue;
 
-      final week = Week(weekNumberInMonth: _weekNumber, days: _week);
+      final week = Week(
+        year: year,
+        month: month,
+        weekNumberInMonth: _weekNumber,
+        days: _week,
+      );
       weeks.add(week);
     }
 
