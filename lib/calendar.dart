@@ -1,14 +1,14 @@
 import 'package:meta/meta.dart';
 
-import 'year.dart';
+import 'day.dart';
 import 'month.dart';
 import 'week.dart';
-import 'day.dart';
+import 'year.dart';
 
-export 'year.dart';
+export 'day.dart';
 export 'month.dart';
 export 'week.dart';
-export 'day.dart';
+export 'year.dart';
 
 part 'calendar_interface.dart';
 
@@ -72,8 +72,16 @@ class Calendar implements CalendarInterface {
   DayInterface? getSelectedDay() => _selectedDay;
 
   @override
+  List<WeekInterface> getFullWeeksOfPrevMonth() =>
+      buildFullWeeksOfMonth(getPrevMonth());
+
+  @override
   List<WeekInterface> getFullWeeksOfSelectedMonth() =>
       _fullWeeksOfSelectedMonth;
+
+  @override
+  List<WeekInterface> getFullWeeksOfNextMonth() =>
+      buildFullWeeksOfMonth(getNextMonth());
 
   @override
   MonthInterface getNextMonth() {
