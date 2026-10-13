@@ -98,7 +98,7 @@ dart analyze
 [История изменений](CHANGELOG.md). GitHub Actions запускается при push в основную
 ветку, pull request и вручную через **Actions → CI и релиз → Run workflow**.
 После проверок он сохраняет артефакт `release-vX.Y.Z` на 14 дней: исходники,
-описание изменений и `SHA256SUMS`. 
+описание изменений и `SHA256SUMS`.
 
 Для следующего релиза:
 
