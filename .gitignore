@@ -21,3 +21,6 @@ doc/api/
 *.js.map
 
 .idea
+# Архивы, подготовленные для GitHub Release
+dist/
+__pycache__/

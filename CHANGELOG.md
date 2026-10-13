@@ -1,7 +1,18 @@
+# История изменений
+
+## 0.3.1 - 2026-10-13
+
+- Обновлена зависимость для тестов: `test` до `^1.33.0`.
+- Добавлены README на русском языке, инструкции подключения и запуска, пример
+  календарной сетки и скриншот его вывода.
+- Добавлен GitHub Actions: анализ, тесты, запуск примера и подготовка архива
+  исходников с контрольными суммами SHA-256.
+- Настроена публикация GitHub Release по тегу `vX.Y.Z` после успешных проверок.
+
 ## 0.3.0
 
-- `Day`, `Week`, `Month` and `Year` are final classes read through their
-  fields instead of `getYear()`-style methods.
-- `fullWeeksOfMonth` counts the weeks of a month by date: a month that starts
-  on a Monday keeps its first week, and one that ends on a Sunday its last.
-- Moved into the application workspace.
+- `Day`, `Week`, `Month` и `Year` стали final-классами; чтение данных выполняется
+  через поля вместо методов вида `getYear()`.
+- `fullWeeksOfMonth` рассчитывает недели по датам: сохраняет первую неделю
+  месяца, начинающегося в понедельник, и последнюю — заканчивающегося в воскресенье.
+- Пакет перенесён в рабочую область приложения.

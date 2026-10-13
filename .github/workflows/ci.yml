@@ -1,0 +1,77 @@
+name: CI и релиз
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Проверка и подготовка
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      tag: ${{ steps.metadata.outputs.tag }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
+        with:
+          sdk: '3.13.5'
+      - name: Проверка версии и CHANGELOG
+        id: metadata
+        run: python3 .github/scripts/prepare_release.py --check
+      - name: Проверка релизных правил
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'
+      - name: Зависимости
+        run: dart pub get
+      - name: Статический анализ
+        run: dart analyze --fatal-infos
+      - name: Тесты
+        run: dart test
+      - name: Запуск примера
+        run: dart run example/calendar.dart
+      - name: Подготовка архивов и контрольных сумм
+        run: python3 .github/scripts/prepare_release.py
+      - name: Сохранение файлов релиза
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ steps.metadata.outputs.tag }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Публикация GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-${{ needs.check.outputs.tag }}
+          path: dist
+      - name: Публикация проверенного релиза
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.check.outputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" dist/* \
+            --verify-tag --draft --title "$RELEASE_TAG" \
+            --notes-file dist/RELEASE_NOTES.md
+          gh release edit "$RELEASE_TAG" --draft=false --latest
