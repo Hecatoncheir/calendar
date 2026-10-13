@@ -1,39 +1,25 @@
-import 'package:calendar/calendar.dart';
+import 'day.dart';
 
-part 'week_interface.dart';
+/// Неделя [number] в сетке месяца [month] года [year]: дни [days] по дню
+/// недели — как у `DateTime`, понедельник — 1.
+///
+/// Неделя неизменна. Прежде `Calendar` дописывал в неё дни соседнего
+/// месяца (`setDayOfWeek`) и так подменял крайние недели месяца чужими.
+final class Week {
+  final int year;
+  final int month;
 
-class Week implements WeekInterface {
-  final int _year;
-  final int _month;
+  /// Номер недели в месяце, с единицы.
+  final int number;
 
-  final int _weekNumberInMonth;
-  final Map<int, DayInterface?> _days;
+  /// Дни по дню недели. У недели из [Month.weeks] дней соседних месяцев нет,
+  /// у недели из `fullWeeksOfMonth` есть все семь.
+  final Map<int, Day> days;
 
   Week({
-    required int year,
-    required int month,
-    required int weekNumberInMonth,
-    required Map<int, DayInterface?> days,
-  })  : _year = year,
-        _month = month,
-        _weekNumberInMonth = weekNumberInMonth,
-        _days = days;
-
-  @override
-  int getYear() => _year;
-
-  @override
-  int getMonth() => _month;
-
-  @override
-  int getWeekNumberInMonth() => _weekNumberInMonth;
-
-  @override
-  DayInterface? getDayOfWeek(int dayOfWeek) => _days[dayOfWeek];
-
-  @override
-  Map<int, DayInterface?> getDaysOfWeek() => _days;
-
-  @override
-  void setDayOfWeek(int dayOfWeek, DayInterface day) => _days[dayOfWeek] = day;
+    required this.year,
+    required this.month,
+    required this.number,
+    required Map<int, Day> days,
+  }) : days = Map.unmodifiable(days);
 }

@@ -9,8 +9,8 @@ void main() {
       const dayNumber = 11;
 
       final day = Day(year: yearNumber, month: monthNumber, day: dayNumber);
-      expect(day.getWeekday(), equals(2));
-      expect(day.getWeekday() == DateTime.tuesday, isTrue);
+      expect(day.weekday, equals(2));
+      expect(day.weekday == DateTime.tuesday, isTrue);
     });
 
     test("can return week day", () async {
@@ -19,8 +19,8 @@ void main() {
       const dayNumber = 10;
 
       final day = Day(year: year, month: month, day: dayNumber);
-      expect(day.getWeekday(), equals(1));
-      expect(day.getWeekday() == DateTime.monday, isTrue);
+      expect(day.weekday, equals(1));
+      expect(day.weekday == DateTime.monday, isTrue);
     });
   });
 }

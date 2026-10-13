@@ -1,122 +1,91 @@
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
 
-import 'package:calendar/week.dart';
-
 import 'day.dart';
 import 'date_time_extension.dart';
+import 'week.dart';
 
-part 'month_interface.dart';
+/// Месяц [number] года [year] — его дни и недели.
+final class Month {
+  final int year;
 
-class Month implements MonthInterface {
-  final int _month;
-  final int _year;
-  final int _daysCount;
-  late final List<DayInterface?> _days;
-  late final List<WeekInterface> _weeks;
-  late final _numberOfWeeks;
+  /// Номер месяца — как у `DateTime`: январь — 1.
+  final int number;
 
-  final _whichDayToWeekStart;
+  /// С какого дня начинается неделя — как у `DateTime`.
+  final int whichDayToWeekStart;
 
+  /// Дни месяца по порядку.
+  late final List<Day> days = buildDays(daysCount);
+
+  /// Недели месяца — только с его днями; целиком, с днями соседних, их
+  /// строит `fullWeeksOfMonth`.
+  late final List<Week> weeks = buildWeeks(year, number, days);
+
+  /// Неверный [whichDayToWeekStart] отвергается сразу, как и прежде, когда
+  /// недели строились в конструкторе.
   Month({
-    required int year,
+    required this.year,
     required int month,
-    int whichDayToWeekStart = DateTime.monday,
-  })  : _year = year,
-        _month = month,
-        _daysCount = DateTime(year, month).daysInMonthCount(),
-        _whichDayToWeekStart = whichDayToWeekStart {
-    _days = buildDays(_daysCount);
-    _weeks = buildWeeks(year, month, _days);
-    _numberOfWeeks = _weeks.length;
-  }
-
-  @override
-  int getYear() => _year;
-
-  @override
-  int getMonthNumber() => _month;
-
-  @override
-  int getDaysCount() => _daysCount;
-
-  @override
-  List<DayInterface?> getDays() => _days;
-
-  @override
-  DayInterface? getDay(int dayNumber) =>
-      _days.firstWhereOrNull((day) => day != null && day.getDay() == dayNumber);
-
-  @override
-  List<WeekInterface> getWeeks() => _weeks;
-
-  @override
-  int getNumberOfWeeks() => _numberOfWeeks;
-
-  @visibleForTesting
-  List<Day?> buildDays(int daysCount) {
-    final days = <Day>[];
-
-    for (int dayIndex = 1; dayIndex < daysCount + 1; dayIndex++) {
-      final day = Day(year: _year, month: _month, day: dayIndex);
-      days.add(day);
-    }
-
-    return days;
-  }
-
-  @visibleForTesting
-  List<WeekInterface> buildWeeks(
-    int year,
-    int month,
-    List<DayInterface?> days,
-  ) {
-    final _weeks = _buildWeeks(_whichDayToWeekStart, days);
-
-    final weeks = <WeekInterface>[];
-    for (final _weekNumber in _weeks.keys) {
-      final _week = _weeks[_weekNumber];
-      if (_week == null) continue;
-
-      final week = Week(
-        year: year,
-        month: month,
-        weekNumberInMonth: _weekNumber,
-        days: _week,
+    this.whichDayToWeekStart = DateTime.monday,
+  }) : number = month {
+    if (whichDayToWeekStart < DateTime.monday ||
+        whichDayToWeekStart > DateTime.sunday) {
+      throw ArgumentError.value(
+        whichDayToWeekStart,
+        'whichDayToWeekStart',
+        'must be a DateTime weekday from monday (1) to sunday (7)',
       );
-      weeks.add(week);
     }
-
-    return weeks;
   }
 
-  @override
-  List<DayInterface?> getFirstDaysCount(int count) =>
-      _days.getRange(0, count).toList();
+  int get daysCount => DateTime(year, number).daysInMonthCount();
 
-  @override
-  List<DayInterface?> getLastDaysCount(int count) =>
-      _days.getRange(_days.length - count, _days.length).toList();
+  /// День [number] месяца; `null` — такого в месяце нет.
+  Day? day(int number) => days.firstWhereOrNull((day) => day.day == number);
 
-  Map<int, Map<int, DayInterface?>> _buildWeeks(
-    int whichDayToWeekStart, // TODO: use it for build weeks
-    List<DayInterface?> days,
-  ) {
-    final weeks = <int, Map<int, DayInterface?>>{};
+  /// Первая ли неделя месяца — неделя [weekNumber].
+  bool isFirstWeek(int weekNumber) => weekNumber == 1;
 
-    int weekNumber = 1;
-    Map<int, DayInterface?> week = <int, DayInterface?>{};
-    weeks[weekNumber] = week;
+  /// Последняя ли неделя месяца — неделя [weekNumber].
+  bool isLastWeek(int weekNumber) => weekNumber == weeks.length;
 
-    for (final day in days) {
-      if (day == null) continue;
+  /// Первые [count] дней месяца.
+  List<Day> firstDays(int count) => days.getRange(0, count).toList();
 
-      weeks[weekNumber]![day.getWeekday()] = day;
+  /// Последние [count] дней месяца.
+  List<Day> lastDays(int count) =>
+      days.getRange(days.length - count, days.length).toList();
 
-      if (day.getWeekday() == DateTime.sunday) {
+  @visibleForTesting
+  List<Day> buildDays(int daysCount) => [
+    for (var day = 1; day <= daysCount; day++)
+      Day(year: year, month: number, day: day),
+  ];
+
+  @visibleForTesting
+  List<Week> buildWeeks(int year, int month, List<Day> days) => [
+    for (final MapEntry(key: weekNumber, value: weekDays) in _weeksOf(
+      days,
+    ).entries)
+      Week(year: year, month: month, number: weekNumber, days: weekDays),
+  ];
+
+  Map<int, Map<int, Day>> _weeksOf(List<Day> days) {
+    final whichDayToWeekEnd = whichDayToWeekStart == DateTime.monday
+        ? DateTime.sunday
+        : whichDayToWeekStart - 1;
+
+    var weekNumber = 1;
+    final weeks = <int, Map<int, Day>>{weekNumber: {}};
+
+    for (final (index, day) in days.indexed) {
+      weeks[weekNumber]![day.weekday] = day;
+
+      final hasMoreDays = index < days.length - 1;
+      if (hasMoreDays && day.weekday == whichDayToWeekEnd) {
         weekNumber++;
-        week = <int, DayInterface?>{};
-        weeks[weekNumber] = week;
+        weeks[weekNumber] = {};
       }
     }
 

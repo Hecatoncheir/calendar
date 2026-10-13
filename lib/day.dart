@@ -1,27 +1,27 @@
-part 'day_interface.dart';
+/// День календаря: число [day] месяца [month] года [year].
+///
+/// Прежде к дню вёл интерфейс с единственной реализацией и геттеры
+/// `getYear()`, `getMonth()`, `getDay()`, а выбранный ли это день, каждый
+/// виджет сравнивал по трём полям сам.
+final class Day {
+  final int year;
 
-class Day implements DayInterface {
-  final int _year;
-  final int _month;
-  final int _day;
+  /// Месяц — как у `DateTime`: январь — 1.
+  final int month;
+  final int day;
 
-  Day({
-    required int year,
-    required int month,
-    required int day,
-  })  : _year = year,
-        _month = month,
-        _day = day;
+  const Day({required this.year, required this.month, required this.day});
 
-  @override
-  int getYear() => _year;
+  /// День недели — как у `DateTime`: понедельник — 1.
+  int get weekday => date.weekday;
 
-  @override
-  int getMonth() => _month;
+  /// Полночь этого дня.
+  DateTime get date => DateTime(year, month, day);
 
-  @override
-  int getDay() => _day;
-
-  @override
-  int getWeekday() => DateTime(_year, _month, _day).weekday;
+  /// Тот же ли это день, что [other]; `null` — не тот.
+  bool isSameDayAs(Day? other) =>
+      other != null &&
+      other.year == year &&
+      other.month == month &&
+      other.day == day;
 }

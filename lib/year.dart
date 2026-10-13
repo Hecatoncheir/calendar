@@ -1,48 +1,22 @@
 import 'month.dart';
 
-part 'year_interface.dart';
+/// Год [number] — его месяцы.
+final class Year {
+  final int number;
 
-class Year implements YearInterface {
-  final int _year;
-  late Map<int, Month?> _allMonth;
+  /// Месяцы года по номеру — как у `DateTime`: январь — 1.
+  late final Map<int, Month> months = {
+    for (var month = DateTime.january; month <= DateTime.december; month++)
+      month: Month(year: number, month: month),
+  };
 
-  Year({
-    required year,
-  }) : _year = year {
-    _allMonth = buildAllMonthOfYear(year);
-  }
+  Year({required int year}) : number = year;
 
-  @override
-  int getYearNumber() => _year;
+  /// Месяц [number] года; `null` — такого номера нет.
+  Month? month(int number) => months[number];
 
-  @override
-  Map<int, Month?> getAllMonths() => _allMonth;
-
-  Map<int, Month?> buildAllMonthOfYear(int year) {
-    final months = <int, Month?>{};
-
-    const monthInYear = 12;
-
-    for (int monthNumber = 1; monthNumber <= monthInYear; monthNumber++) {
-      final month = Month(year: year, month: monthNumber);
-      months[monthNumber] = month;
-    }
-
-    return months;
-  }
-
-  @override
-  Month? getMonth(int month) => _allMonth[month];
-
-  @override
-  Map<int, Month?> getMonths(List<int> months) {
-    final _months = <int, Month?>{};
-
-    for (final monthNumber in months) {
-      final month = _allMonth[monthNumber];
-      _months[monthNumber] = month;
-    }
-
-    return _months;
-  }
+  /// Месяцы с номерами [numbers]; номер, которого нет, — `null`.
+  Map<int, Month?> monthsOf(List<int> numbers) => {
+    for (final number in numbers) number: months[number],
+  };
 }
